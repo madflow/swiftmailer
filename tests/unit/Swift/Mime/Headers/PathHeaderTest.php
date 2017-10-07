@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Mime_Headers_PathHeaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -73,6 +74,6 @@ class Swift_Mime_Headers_PathHeaderTest extends \PHPUnit\Framework\TestCase
 
     private function getHeader($name)
     {
-        return new Swift_Mime_Headers_PathHeader($name, new EmailValidator());
+        return new Swift_Mime_Headers_PathHeader($name, new EmailValidator(), new RFCValidation());
     }
 }

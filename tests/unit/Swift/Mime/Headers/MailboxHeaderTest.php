@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Mime_Headers_MailboxHeaderTest extends \SwiftMailerTestCase
 {
@@ -311,7 +312,7 @@ class Swift_Mime_Headers_MailboxHeaderTest extends \SwiftMailerTestCase
 
     private function getHeader($name, $encoder)
     {
-        $header = new Swift_Mime_Headers_MailboxHeader($name, $encoder, new EmailValidator());
+        $header = new Swift_Mime_Headers_MailboxHeader($name, $encoder, new EmailValidator(), new RFCValidation());
         $header->setCharset($this->charset);
 
         return $header;

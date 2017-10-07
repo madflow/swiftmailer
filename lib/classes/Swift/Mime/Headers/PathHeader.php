@@ -9,6 +9,7 @@
  */
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 
 /**
@@ -26,22 +27,32 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     private $address;
 
     /**
-     * The strict EmailValidator.
+     * The email validator
      *
      * @var EmailValidator
      */
     private $emailValidator;
 
     /**
+     * The actual email validation
+     *
+     * @var EmailValidation
+     */
+    private $emailValidation;
+
+
+    /**
      * Creates a new PathHeader with the given $name.
      *
-     * @param string         $name
+     * @param string $name
      * @param EmailValidator $emailValidator
+     * @param EmailValidation $emailValidation
      */
-    public function __construct($name, EmailValidator $emailValidator)
+    public function __construct($name, EmailValidator $emailValidator, EmailValidation $emailValidation)
     {
         $this->setFieldName($name);
         $this->emailValidator = $emailValidator;
+        $this->emailValidation = $emailValidation;
     }
 
     /**
@@ -135,17 +146,17 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
-     * Throws an Exception if the address passed does not comply with RFC 2822.
+     * Throws an Exception if the address passed does not comply with the configured validation.
      *
      * @param string $address
-     *
-     * @throws Swift_RfcComplianceException If address is invalid
+     * @return void
+     * @throws Swift_RfcComplianceException if address is invalid
      */
-    private function assertValidAddress($address)
+    private function assertValidAddress(string $address) : void
     {
-        if (!$this->emailValidator->isValid($address, new RFCValidation())) {
+        if (!$this->emailValidator->isValid($address, $this->emailValidation)) {
             throw new Swift_RfcComplianceException(
-                'Address set in PathHeader does not comply with addr-spec of RFC 2822.'
+                'Address set in PathHeader does not comply with addr-spec'
             );
         }
     }

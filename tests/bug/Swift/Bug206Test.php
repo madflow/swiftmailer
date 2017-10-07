@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Bug206Test extends \PHPUnit\Framework\TestCase
 {
@@ -16,7 +17,8 @@ class Swift_Bug206Test extends \PHPUnit\Framework\TestCase
             new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8')
         );
         $emailValidator = new EmailValidator();
-        $this->factory = new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator);
+        $emailvalidation = new RFCValidation();
+        $this->factory = new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator, $emailvalidation);
     }
 
     public function testMailboxHeaderEncoding()

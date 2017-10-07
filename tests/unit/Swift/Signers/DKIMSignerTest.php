@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Signers_DKIMSignerTest extends \SwiftMailerTestCase
 {
@@ -150,7 +151,10 @@ class Swift_Signers_DKIMSignerTest extends \SwiftMailerTestCase
         $headerEncoder = new Swift_Mime_HeaderEncoder_QpHeaderEncoder(new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8'));
         $paramEncoder = new Swift_Encoder_Rfc2231Encoder(new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8'));
         $emailValidator = new EmailValidator();
-        $headers = new Swift_Mime_SimpleHeaderSet(new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator));
+        $emailValidation = new RFCValidation();
+        $headers = new Swift_Mime_SimpleHeaderSet(
+            new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator, $emailValidation)
+        );
 
         return $headers;
     }
@@ -168,7 +172,8 @@ class Swift_Signers_DKIMSignerTest extends \SwiftMailerTestCase
         $headerEncoder = new Swift_Mime_HeaderEncoder_QpHeaderEncoder(new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8'));
         $paramEncoder = new Swift_Encoder_Rfc2231Encoder(new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8'));
         $emailValidator = new EmailValidator();
-        $headerFactory = new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator);
+        $emailValidation = new RFCValidation();
+        $headerFactory = new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $emailValidator, $emailValidation);
         $headers = $this->getMockery('Swift_Mime_SimpleHeaderSet');
 
         $headers->shouldReceive('listAll')

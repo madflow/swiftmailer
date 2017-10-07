@@ -9,6 +9,9 @@ Swift_DependencyContainer::getInstance()
     ->register('email.validator')
     ->asSharedInstanceOf('Egulias\EmailValidator\EmailValidator')
 
+    ->register('email.validator.validation')
+    ->asSharedInstanceOf('Egulias\EmailValidator\Validation\RFCValidation')
+
     ->register('mime.idgenerator.idright')
     // As SERVER_NAME can come from the user in certain configurations, check that
     // it does not contain forbidden characters (see RFC 952 and RFC 2181). Use
@@ -67,6 +70,7 @@ Swift_DependencyContainer::getInstance()
             'mime.qpheaderencoder',
             'mime.rfc2231encoder',
             'email.validator',
+            'email.validator.validation',
             'properties.charset',
         ))
 

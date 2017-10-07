@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Mime_MimePartAcceptanceTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,6 +9,7 @@ class Swift_Mime_MimePartAcceptanceTest extends \PHPUnit\Framework\TestCase
     private $cache;
     private $headers;
     private $emailValidator;
+    private $emailValidation;
 
     protected function setUp()
     {
@@ -30,9 +32,10 @@ class Swift_Mime_MimePartAcceptanceTest extends \PHPUnit\Framework\TestCase
             new Swift_CharacterStream_ArrayCharacterStream($factory, 'utf-8')
             );
         $this->emailValidator = new EmailValidator();
+        $this->emailValidation = new RFCValidation();
         $this->idGenerator = new Swift_Mime_IdGenerator('example.com');
         $this->headers = new Swift_Mime_SimpleHeaderSet(
-            new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $this->emailValidator)
+            new Swift_Mime_SimpleHeaderFactory($headerEncoder, $paramEncoder, $this->emailValidator, $this->emailValidation)
             );
     }
 

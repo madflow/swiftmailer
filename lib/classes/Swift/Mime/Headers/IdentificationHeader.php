@@ -9,6 +9,7 @@
  */
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 
 /**
@@ -28,22 +29,31 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     private $ids = array();
 
     /**
-     * The strict EmailValidator.
+     * The email validator
      *
      * @var EmailValidator
      */
     private $emailValidator;
 
     /**
+     * The actual email validation
+     *
+     * @var EmailValidation
+     */
+    private $emailValidation;
+
+    /**
      * Creates a new IdentificationHeader with the given $name and $id.
      *
-     * @param string         $name
+     * @param string $name
      * @param EmailValidator $emailValidator
+     * @param EmailValidation $emailValidation
      */
-    public function __construct($name, EmailValidator $emailValidator)
+    public function __construct($name, EmailValidator $emailValidator, EmailValidation $emailValidation)
     {
         $this->setFieldName($name);
         $this->emailValidator = $emailValidator;
+        $this->emailValidation = $emailValidation;
     }
 
     /**
@@ -169,15 +179,15 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     }
 
     /**
-     * Throws an Exception if the id passed does not comply with RFC 2822.
+     * Throws an Exception if the id passed does not comply with the configured validation.
      *
      * @param string $id
-     *
+     * @return void
      * @throws Swift_RfcComplianceException
      */
-    private function assertValidId($id)
+    private function assertValidId(string $id) : void
     {
-        if (!$this->emailValidator->isValid($id, new RFCValidation())) {
+        if (!$this->emailValidator->isValid($id, $this->emailValidation)) {
             throw new Swift_RfcComplianceException('Invalid ID given <'.$id.'>');
         }
     }

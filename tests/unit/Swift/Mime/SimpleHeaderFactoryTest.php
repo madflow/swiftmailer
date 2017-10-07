@@ -1,6 +1,7 @@
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class Swift_Mime_SimpleHeaderFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -150,10 +151,8 @@ class Swift_Mime_SimpleHeaderFactoryTest extends \PHPUnit\Framework\TestCase
     {
         return new Swift_Mime_SimpleHeaderFactory(
             $encoder
-                ? $encoder : $this->createHeaderEncoder(),
-            $paramEncoder
-                ? $paramEncoder : $this->createParamEncoder(),
-            new EmailValidator()
+                ? $encoder : $this->createHeaderEncoder(), $paramEncoder
+            ? $paramEncoder : $this->createParamEncoder(), new EmailValidator(), new RFCValidation()
             );
     }
 

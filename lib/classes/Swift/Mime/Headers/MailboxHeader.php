@@ -9,6 +9,7 @@
  */
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 
 /**
@@ -26,24 +27,37 @@ class Swift_Mime_Headers_MailboxHeader extends Swift_Mime_Headers_AbstractHeader
     private $mailboxes = array();
 
     /**
-     * The strict EmailValidator.
+     * The email validator
      *
      * @var EmailValidator
      */
     private $emailValidator;
 
     /**
+     * The actual email validation
+     *
+     * @var EmailValidation
+     */
+    private $emailValidation;
+
+    /**
      * Creates a new MailboxHeader with $name.
      *
-     * @param string                   $name           of Header
+     * @param string $name of Header
      * @param Swift_Mime_HeaderEncoder $encoder
-     * @param EmailValidator           $emailValidator
+     * @param EmailValidator $emailValidator
+     * @param EmailValidation $emailValidation
      */
-    public function __construct($name, Swift_Mime_HeaderEncoder $encoder, EmailValidator $emailValidator)
+    public function __construct(
+        $name,
+        Swift_Mime_HeaderEncoder $encoder,
+        EmailValidator $emailValidator,
+        EmailValidation $emailValidation)
     {
         $this->setFieldName($name);
         $this->setEncoder($encoder);
         $this->emailValidator = $emailValidator;
+        $this->emailValidation = $emailValidation;
     }
 
     /**
@@ -342,17 +356,17 @@ class Swift_Mime_Headers_MailboxHeader extends Swift_Mime_Headers_AbstractHeader
     }
 
     /**
-     * Throws an Exception if the address passed does not comply with RFC 2822.
+     * Throws an Exception if the address passed does not comply with the configured email validation
      *
      * @param string $address
-     *
-     * @throws Swift_RfcComplianceException If invalid.
+     * @return void
+     * @throws Swift_RfcComplianceException if invalid.
      */
-    private function assertValidAddress($address)
+    private function assertValidAddress(string $address) : void
     {
-        if (!$this->emailValidator->isValid($address, new RFCValidation())) {
+        if (!$this->emailValidator->isValid($address, $this->emailValidation)) {
             throw new Swift_RfcComplianceException(
-                'Address in mailbox given ['.$address.'] does not comply with RFC 2822, 3.6.2.'
+                'Address in mailbox given ['.$address.'] does not validate'
             );
         }
     }
