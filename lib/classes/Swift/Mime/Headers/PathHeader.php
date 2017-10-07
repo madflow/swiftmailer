@@ -152,7 +152,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
      * @return void
      * @throws Swift_RfcComplianceException if address is invalid
      */
-    private function assertValidAddress(string $address) : void
+    private function assertValidAddress(string $address)
     {
         if (!$this->emailValidator->isValid($address, $this->emailValidation)) {
             throw new Swift_RfcComplianceException(

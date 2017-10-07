@@ -185,7 +185,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
      * @return void
      * @throws Swift_RfcComplianceException
      */
-    private function assertValidId(string $id) : void
+    private function assertValidId(string $id)
     {
         if (!$this->emailValidator->isValid($id, $this->emailValidation)) {
             throw new Swift_RfcComplianceException('Invalid ID given <'.$id.'>');
